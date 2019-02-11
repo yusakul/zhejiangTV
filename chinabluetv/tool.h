@@ -12,6 +12,8 @@ size_t http_data_writer(void* data, size_t size, size_t nmemb, void* content);
 
 bool AccessWeb( char* szUrl, char* content);
 
+char* getTS(char * url, char* strPath);
+
 
 #ifndef MD5_H
 #define MD5_H

@@ -72,11 +72,19 @@ int main()
 	
 	decrypt((DWORD*)content);
 
+	char path[111] = "result.m3u8";
+	getTS(url, path);
+
 	system("pause");
 	return 0;
 
 	//点播
 	//http://api.cms.cztv.com/mms/out/video/playJson?id=XXXXXX&domain=www.letv.com&splatid=123&platid=1000&pt=2&at=1
 }
+
+
+//http://ali.l.cztv.com/channels/lantian/channel01/ + .ts
+//http://tx.l.cztv.com/channels/lantian/channel01/ + .ts
+//http://yf.l.cztv.com/channels/lantian/channel01/ + .ts
 
 

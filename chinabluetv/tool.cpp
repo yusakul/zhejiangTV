@@ -11,7 +11,7 @@ int decrypt(DWORD* pStream)
 	int i, iByteNum, j, k;
 	FILE *pFileA;
 
-	fopen_s(&pFileA, "D:\\result.m3u8", "wb+");
+	fopen_s(&pFileA, "result.m3u8", "wb+");
 
 	
 	while( *pStream!=NULL)
@@ -75,4 +75,37 @@ bool AccessWeb( char* szUrl, char* content)
 	curl_easy_cleanup(curl);
 
 	return true;
+}
+
+
+char* getTS(char * url, char* strPath)
+{
+	FILE *pFile;
+	char line[1024] = {};
+	char result[10][100] = {};
+	int i = 0;
+
+	fopen_s(&pFile, strPath, "r");
+
+	if (pFile == NULL)
+	{
+		return NULL;
+	}
+
+	char* buf = strstr(url, "channel01/");
+	if (buf != NULL)
+	{
+		buf[10] = '\0';        //在“channel01/”后设置结束符\0
+	}
+
+	while (fgets(line, 1024, pFile) != NULL)
+	{
+		if (strstr(line, ".ts"))
+		{
+			char* tmp = line;
+			sprintf_s(result[i++], 100, "%s%s", url, tmp);
+			printf("%s", result[i - 1]);
+		}
+	}
+	return 0;
 }
