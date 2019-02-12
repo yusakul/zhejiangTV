@@ -1,17 +1,17 @@
 #include "tool.h"
 
 
-int decrypt(DWORD* pStream)
+bool decrypt(DWORD* pStream, char* strPath)
 {
 	if (pStream == NULL)
 	{
-		return 0;
+		return false;
 	}
 
 	int i, iByteNum, j, k;
 	FILE *pFileA;
 
-	fopen_s(&pFileA, "result.m3u8", "wb+");
+	fopen_s(&pFileA, strPath, "wb+");
 
 	
 	while( *pStream!=NULL)
@@ -27,7 +27,7 @@ int decrypt(DWORD* pStream)
 	}
 	fclose(pFileA);
 
-	return 0;
+	return true;
 }
 
 //回调函数
@@ -78,11 +78,11 @@ bool AccessWeb( char* szUrl, char* content)
 }
 
 
-char* getTS(char * url, char* strPath)
+char* getTS(char * strUrl, char* strPath, vector<char*> &VectorTS)
 {
 	FILE *pFile;
 	char line[1024] = {};
-	char result[10][100] = {};
+	char result[0x10][100] = {};
 	int i = 0;
 
 	fopen_s(&pFile, strPath, "r");
@@ -92,7 +92,7 @@ char* getTS(char * url, char* strPath)
 		return NULL;
 	}
 
-	char* buf = strstr(url, "channel01/");
+	char* buf = strstr(strUrl, "channel01/");
 	if (buf != NULL)
 	{
 		buf[10] = '\0';        //在“channel01/”后设置结束符\0
@@ -103,8 +103,10 @@ char* getTS(char * url, char* strPath)
 		if (strstr(line, ".ts"))
 		{
 			char* tmp = line;
-			sprintf_s(result[i++], 100, "%s%s", url, tmp);
-			printf("%s", result[i - 1]);
+			sprintf_s(result[i], 100, "%s%s", strUrl, tmp);
+			VectorTS.push_back(result[i]);
+			//printf("%s", result[i]);
+			i++;
 		}
 	}
 	return 0;

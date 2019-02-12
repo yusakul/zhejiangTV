@@ -1,9 +1,8 @@
 ﻿#include <stdio.h>
-
+#include <iostream>
 #include <windows.h>
 #include <string>
 #include <time.h>
-
 
 #include "tool.h"
 
@@ -53,6 +52,8 @@ int main()
 {
 	char strTime[20] = {};
 	char url[0x100] = {};
+	char strPath[MAX_PATH] = "result.m3u8";
+	vector<char*> VectorTS;
 
 	printf("输入时间戳（输入0则默认为当前时间）: ");
 	scanf_s("%s", strTime, 20);
@@ -64,16 +65,33 @@ int main()
 		sprintf_s(strTime, "%d", myt);
 	}
 
+	//拼接请求
 	getRequestUrl(strTime, url);
 	printf("%s\n", url);
 
+	//建立连接请求m3u8
 	char content[1024] = {};
-	AccessWeb(url, content);
+	if (!AccessWeb(url, content))
+	{
+		printf("connect failed...\n");
+		return 0;
+	}
 	
-	decrypt((DWORD*)content);
+	//解密m3u8
+	if (!decrypt((DWORD*)content, strPath))
+	{
+		printf("decrypt failed...\n");
+		return 0;
+	}
 
-	char path[111] = "result.m3u8";
-	getTS(url, path);
+	//获取Ts链接
+	getTS(url, strPath, VectorTS);
+
+	//输出Ts链接
+	for (vector<char*>::iterator iter1 = VectorTS.begin(); iter1 != VectorTS.end(); ++iter1) 
+	{
+		cout << *iter1;
+	}
 
 	system("pause");
 	return 0;
@@ -81,10 +99,5 @@ int main()
 	//点播
 	//http://api.cms.cztv.com/mms/out/video/playJson?id=XXXXXX&domain=www.letv.com&splatid=123&platid=1000&pt=2&at=1
 }
-
-
-//http://ali.l.cztv.com/channels/lantian/channel01/ + .ts
-//http://tx.l.cztv.com/channels/lantian/channel01/ + .ts
-//http://yf.l.cztv.com/channels/lantian/channel01/ + .ts
 
 

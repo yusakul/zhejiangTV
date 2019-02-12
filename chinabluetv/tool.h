@@ -4,15 +4,18 @@
 #include <string>
 #include "../curl/curl.h"
 
+#include <vector>
+using namespace std;
+
 //curl≈‰÷√œÍº˚£∫https://blog.csdn.net/bency/article/details/80773932
 
-int decrypt(DWORD* pStream);
+bool decrypt(DWORD* pStream, char* strPath);
 
 size_t http_data_writer(void* data, size_t size, size_t nmemb, void* content);
 
 bool AccessWeb( char* szUrl, char* content);
 
-char* getTS(char * url, char* strPath);
+char* getTS(char * url, char* strPath, vector<char*> & VectorTS);
 
 
 #ifndef MD5_H
